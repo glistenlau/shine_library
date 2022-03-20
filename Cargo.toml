@@ -1,0 +1,15 @@
+[package]
+name = "shine_library"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.56"
+lazy_static = "1.4.0"
+rocksdb = "0.18.0"
+serde_json = "1.0.79"
+log = "0.4.14"
+fern = "0.6.0"
+chrono = "0.4.19"
