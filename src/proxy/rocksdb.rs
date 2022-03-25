@@ -460,6 +460,7 @@ pub fn get_conn(path: &str, merge_op: Option<RocksMergeOp>) -> MutexGuard<'stati
         is_merge_op_changed = current_merge_op.ne(&merge_op);
 
         if is_path_changed || !initialized {
+            log::info!("Rocksdb path changed to: {}", &path);
             *current_path = Some(path.to_string());
         }
 
