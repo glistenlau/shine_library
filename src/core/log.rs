@@ -1,4 +1,4 @@
-use std::{path::PathBuf, str::FromStr};
+use std::{fs, path::PathBuf, str::FromStr};
 
 use chrono;
 
@@ -9,6 +9,8 @@ fn get_path(log_path: &str) -> PathBuf {
 }
 
 pub fn setup_logger(log_path: &str) -> Result<(), fern::InitError> {
+    let path = get_path(log_path);
+    fs::create_dir_all(&path)?;
     fern::Dispatch::new()
         .format(|out, message, record| {
             out.finish(format_args!(
@@ -22,7 +24,7 @@ pub fn setup_logger(log_path: &str) -> Result<(), fern::InitError> {
         })
         .level(log::LevelFilter::Debug)
         // .chain(std::io::stdout())
-        .chain(fern::log_file(get_path(log_path))?)
+        .chain(fern::log_file(path)?)
         .apply()?;
     Ok(())
 }
