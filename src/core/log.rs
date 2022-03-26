@@ -22,11 +22,14 @@ pub fn setup_logger(log_path: &str) -> Result<(), fern::InitError> {
                 message
             ))
         })
-        .level(log::LevelFilter::Debug)
         .chain(fern::log_file(path)?);
 
     if cfg!(debug_assertions) {
-        dispath = dispath.chain(std::io::stdout());
+        dispath = dispath
+            .chain(std::io::stdout())
+            .level(log::LevelFilter::Debug);
+    } else {
+        dispath = dispath.level(log::LevelFilter::Info);
     }
 
     dispath.apply()?;
