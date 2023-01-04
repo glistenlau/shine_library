@@ -375,6 +375,21 @@ impl RocksdbProxy {
         Ok(())
     }
 
+    pub fn put<K>(cf: Option<&str>, key: K, value: K, db: &mut DB) -> Result<()>
+    where
+        K: AsRef<[u8]>,
+    {
+        if let Some(cf_str) = cf {
+            Self::create_cf_if_not(cf_str, db)?;
+            let cf_handle = db.cf_handle(cf_str).unwrap();
+            db.put_cf(cf_handle, key, value)?;
+        } else {
+            db.put(key, value)?;
+        }
+
+        Ok(())
+    }
+
     pub fn batch_write<K, I>(cf: Option<&str>, keys: I, values: I, db: &mut DB) -> Result<()>
     where
         K: AsRef<[u8]>,
@@ -386,7 +401,6 @@ impl RocksdbProxy {
 
         if let Some(cf_str) = cf {
             Self::create_cf_if_not(cf_str, db)?;
-
             let cf_handle = db.cf_handle(cf_str).unwrap();
             while let (Some(k), Some(v)) = (keys_iter.next(), vals_iter.next()) {
                 write_batch.put_cf(cf_handle, k, v);
